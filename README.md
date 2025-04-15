@@ -15,31 +15,72 @@ A lightweight Python CRUD (Create, Read, Update, Delete) application for managin
 crud-app/
 │
 ├── app/                      # Core application logic
-│   ├── __init__.py           # Makes app a package
+│   ├── __init__.py           # Makes app a package 
 │   ├── main.py               # Entry point to start the app
 │   ├── models.py             # Data structures or ORM classes
 │   ├── crud.py               # Functions for Create, Read, Update, Delete
-│   └── utils.py              # Helper functions (validation, formatting)
+│   ├── utils.py              # Helper functions (validation, formatting)
+│   ├── api/                  # API related files
+│   │   ├── __init__.py
+│   │   ├── routes.py         # API endpoints
+│   │   └── auth.py           # Authentication functions
+│   ├── db/                   # Database related files
+│   │   ├── __init__.py
+│   │   ├── database.py       # Database connection setup
+│   │   └── migrations/       # Database migrations
+│   └── web/                  # Web interface
+│       ├── __init__.py
+│       ├── routes.py         # Web routes
+│       ├── forms.py          # Form definitions
+│       └── templates/        # HTML templates
+│           ├── base.html
+│           ├── index.html
+│           ├── items/
+│           │   ├── list.html
+│           │   ├── create.html
+│           │   ├── edit.html
+│           │   └── view.html
+│           └── auth/
+│               ├── login.html
+│               └── register.html
 │
-├── data/                     # Data storage (JSON file)
-│   └── db.json               # "Database" file
+├── static/                   # Static files for web interface
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   └── img/
+│
+├── data/                     # Data storage
+│   └── db.json               # Original JSON "database" file
 │
 ├── tests/                    # Unit tests
 │   ├── __init__.py
 │   ├── test_crud.py
-│   └── test_utils.py
+│   ├── test_utils.py
+│   ├── test_api.py           # Tests for API endpoints
+│   └── test_web.py           # Tests for web interface
 │
+├── migrations/               # Database migrations
+│   └── versions/
+│
+├── instance/                 # Instance-specific configuration
+│   └── config.py             # Instance configuration 
+│
+├── config.py                 # Application configuration
 ├── requirements.txt          # Python dependencies
-├── README.md                 # This file
+├── Dockerfile                # Docker configuration
+├── docker-compose.yml        # Docker Compose configuration
+├── README.md                 # App overview, setup, usage instructions
 ├── .gitignore                # Files to exclude from version control
-└── LICENSE                   # Open-source license
+└── LICENSE                   # Open-source license (Apache License 2.0)
 ```
 
 ## Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/crud-app.git
+   git clone https://github.com/EzekielGitura/crud-app.git
    cd crud-app
    ```
 
@@ -101,10 +142,6 @@ Run the tests with:
 ```
 python -m unittest discover tests
 ```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
