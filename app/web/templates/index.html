@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Home - CRUD App{% endblock %}
+
+{% block page_title %}Welcome to CRUD App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">About</h2>
+                <p class="card-text">
+                    This is a comprehensive CRUD (Create, Read, Update, Delete) application built with Python and Flask.
+                    It features a web interface, RESTful API, and authentication system.
+                </p>
+                <p class="card-text">
+                    You can manage items, organize them into categories, and add tags for better organization.
+                </p>
+                
+                <h3 class="mt-4">Features</h3>
+                <ul>
+                    <li>User authentication and authorization</li>
+                    <li>RESTful API with JWT authentication</li>
+                    <li>SQLAlchemy ORM for database interactions</li>
+                    <li>Bootstrap-based responsive UI</li>
+                    <li>Item categorization and tagging</li>
+                </ul>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('web.item_list') }}" class="btn btn-primary">Browse Items</a>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('web.item_create') }}" class="btn btn-success">Create New Item</a>
+                    {% else %}
+                    <a href="{{ url_for('web.register') }}" class="btn btn-success">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Items</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if recent_items %}
+                    {% for item in recent_items %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('web.item_view', item_id=item.id) }}">{{ item.name }}</a>
+                        <small class="text-muted d-block">{{ item.created_at.strftime('%Y-%m-%d') }}</small>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No items yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Categories</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if categories %}
+                    {% for category in categories %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('web.item_list', category_id=category.id) }}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No categories yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

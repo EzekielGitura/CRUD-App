@@ -1,0 +1,5 @@
+# No external dependencies required for this simple CRUD app
+# If you expand the application, you might need packages like:
+# flask==2.0.1  # For web interface
+# sqlalchemy==1.4.23  # For SQL database support
+# pytest==6.2.5  # For testing
