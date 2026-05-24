@@ -36,6 +36,8 @@ crud-app/
 |   `-- utils.py      # Validation, formatting, and search helpers
 |-- data/
 |   `-- db.json       # Local JSON data store
+|-- public/
+|   `-- favicon.jpg   # Browser favicon served through /favicon.ico
 |-- tests/
 |   |-- test_crud.py
 |   `-- test_utils.py

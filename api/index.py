@@ -11,6 +11,11 @@ def _item_to_dict(item) -> Dict[str, Any]:
 
 
 class handler(BaseHTTPRequestHandler):
+    def _send_no_content(self) -> None:
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+
     def _send_json(self, status: int, payload: Dict[str, Any]) -> None:
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)
@@ -50,6 +55,10 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parts = self._path_parts()
+
+        if parts == ["favicon.ico"]:
+            self._send_no_content()
+            return
 
         if not parts:
             self._send_json(
