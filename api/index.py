@@ -70,9 +70,10 @@ class handler(BaseHTTPRequestHandler):
                         "POST /api/items",
                         "GET /api/items/{id}",
                         "PUT /api/items/{id}",
+                        "PATCH /api/items/{id}",
                         "DELETE /api/items/{id}",
                     ],
-                    "storage": "Temporary on Vercel unless CRUD_DB_PATH or a database adapter is configured.",
+                    "storage": crud.get_storage_status(),
                 },
             )
             return

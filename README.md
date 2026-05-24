@@ -5,12 +5,13 @@ A small Python CRUD project with two entry points:
 - A command-line app for local use
 - A Vercel-compatible serverless API
 
-The project uses only the Python standard library.
+Local development can use a JSON file. Vercel deployments can use MongoDB Atlas through `MONGODB_URI` or `CRUD_MONGODB_URI`.
 
 ## What It Does
 
 - Creates, reads, updates, and deletes items
 - Stores local data in `data/db.json`
+- Uses MongoDB Atlas when a database connection string is configured
 - Exposes REST-style item routes under `/api`
 - Includes unit tests for the CRUD and utility functions
 
@@ -32,7 +33,7 @@ crud-app/
 |   |-- __init__.py
 |   |-- main.py       # CLI entry point
 |   |-- models.py     # Item model
-|   |-- crud.py       # JSON-backed CRUD functions
+|   |-- crud.py       # JSON/MongoDB-backed CRUD functions
 |   `-- utils.py      # Validation, formatting, and search helpers
 |-- data/
 |   `-- db.json       # Local JSON data store
@@ -42,13 +43,17 @@ crud-app/
 |   |-- test_crud.py
 |   `-- test_utils.py
 |-- vercel.json
-|-- requirements.txt
+|-- requirements.txt # Python deploy dependency for MongoDB
 `-- README.md
 ```
 
 ## Local Setup
 
-No third-party packages are required.
+Install dependencies:
+
+```powershell
+pip install -r requirements.txt
+```
 
 Run the tests:
 
@@ -115,8 +120,9 @@ curl -X POST https://your-project.vercel.app/api/items `
 This project is prepared for Vercel with:
 
 - `api/index.py` for the Python serverless function
-- `vercel.json` for API rewrites and function bundle exclusions
+- `vercel.json` for API rewrites
 - `.vercelignore` to keep local-only files out of deployments
+- MongoDB Atlas connection string support for persistent storage
 
 Deploy with the Vercel CLI:
 
@@ -131,7 +137,35 @@ Or import the GitHub repository from the Vercel dashboard.
 
 Local CLI usage writes to `data/db.json`.
 
-On Vercel, the function writes to temporary storage because serverless deployments do not provide persistent writable project files. This is enough for a deployment smoke test, but production CRUD data should use a real database such as Postgres, Supabase, Neon, or another hosted store.
+For durable Vercel data, connect MongoDB Atlas and make sure Vercel has one of these environment variables:
+
+```text
+MONGODB_URI
+CRUD_MONGODB_URI
+```
+
+Recommended setup:
+
+1. Open the project in Vercel.
+2. Go to Storage or Marketplace.
+3. Add MongoDB Atlas.
+4. Leave the custom prefix empty if this is your only MongoDB resource.
+5. If you use a custom prefix, use `CRUD` in the dashboard or `CRUD_` with the Vercel CLI.
+6. Confirm Vercel has `MONGODB_URI` or `CRUD_MONGODB_URI`.
+7. Redeploy the project.
+
+After redeploying, `/api` should report:
+
+```json
+{
+  "storage": {
+    "backend": "mongodb",
+    "persistent": true
+  }
+}
+```
+
+Without one of those environment variables, Vercel falls back to temporary JSON storage. That is fine for a smoke test, but not for long-lived CRUD data.
 
 You can override the JSON file path locally with:
 
