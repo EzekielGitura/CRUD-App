@@ -1,152 +1,138 @@
 # Simple CRUD Application
 
-A lightweight Python CRUD (Create, Read, Update, Delete) application for managing items.
+A small Python CRUD project with two entry points:
 
-## Features
+- A command-line app for local use
+- A Vercel-compatible serverless API
 
-- Create, read, update, and delete items
-- Command-line interface
-- JSON file storage
-- Unit tests
+The project uses only the Python standard library.
 
-## Folder Structure
+## What It Does
 
-```
+- Creates, reads, updates, and deletes items
+- Stores local data in `data/db.json`
+- Exposes REST-style item routes under `/api`
+- Includes unit tests for the CRUD and utility functions
+
+Each item has:
+
+- `id`
+- `name`
+- `description`
+- `created_at`
+- `updated_at`
+
+## Project Structure
+
+```text
 crud-app/
-│
-├── app/                      # Core application logic
-│   ├── __init__.py           # Makes app a package 
-│   ├── main.py               # Entry point to start the app
-│   ├── models.py             # Data structures or ORM classes
-│   ├── crud.py               # Functions for Create, Read, Update, Delete
-│   ├── utils.py              # Helper functions (validation, formatting)
-│   ├── api/                  # API related files
-│   │   ├── __init__.py
-│   │   ├── routes.py         # API endpoints
-│   │   └── auth.py           # Authentication functions
-│   ├── db/                   # Database related files
-│   │   ├── __init__.py
-│   │   ├── database.py       # Database connection setup
-│   │   └── migrations/       # Database migrations
-│   └── web/                  # Web interface
-│       ├── __init__.py
-│       ├── routes.py         # Web routes
-│       ├── forms.py          # Form definitions
-│       └── templates/        # HTML templates
-│           ├── base.html
-│           ├── index.html
-│           ├── items/
-│           │   ├── list.html
-│           │   ├── create.html
-│           │   ├── edit.html
-│           │   └── view.html
-│           └── auth/
-│               ├── login.html
-│               └── register.html
-│
-├── static/                   # Static files for web interface
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   └── main.js
-│   └── img/
-│
-├── data/                     # Data storage
-│   └── db.json               # Original JSON "database" file
-│
-├── tests/                    # Unit tests
-│   ├── __init__.py
-│   ├── test_crud.py
-│   ├── test_utils.py
-│   ├── test_api.py           # Tests for API endpoints
-│   └── test_web.py           # Tests for web interface
-│
-├── migrations/               # Database migrations
-│   └── versions/
-│
-├── instance/                 # Instance-specific configuration
-│   └── config.py             # Instance configuration 
-│
-├── config.py                 # Application configuration
-├── requirements.txt          # Python dependencies
-├── Dockerfile                # Docker configuration
-├── docker-compose.yml        # Docker Compose configuration
-├── README.md                 # App overview, setup, usage instructions
-├── .gitignore                # Files to exclude from version control
-└── LICENSE                   # Open-source license (Apache License 2.0)
+|-- api/
+|   `-- index.py      # Vercel Python serverless function
+|-- app/
+|   |-- __init__.py
+|   |-- main.py       # CLI entry point
+|   |-- models.py     # Item model
+|   |-- crud.py       # JSON-backed CRUD functions
+|   `-- utils.py      # Validation, formatting, and search helpers
+|-- data/
+|   `-- db.json       # Local JSON data store
+|-- tests/
+|   |-- test_crud.py
+|   `-- test_utils.py
+|-- vercel.json
+|-- requirements.txt
+`-- README.md
 ```
 
-## Installation
+## Local Setup
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/EzekielGitura/crud-app.git
-   cd crud-app
-   ```
+No third-party packages are required.
 
-2. Set up a virtual environment (optional but recommended):
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+Run the tests:
 
-3. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-## Usage
-
-### Run the application:
-
-```
-python -m app.main [command] [options]
-```
-
-### Available commands:
-
-- **Create an item**:
-  ```
-  python -m app.main create --name "Item Name" --description "Item Description"
-  ```
-
-- **List all items**:
-  ```
-  python -m app.main list
-  ```
-
-- **Get an item by ID**:
-  ```
-  python -m app.main get --id "item-id"
-  ```
-
-- **Update an item**:
-  ```
-  python -m app.main update --id "item-id" --name "New Name" --description "New Description"
-  ```
-
-- **Delete an item**:
-  ```
-  python -m app.main delete --id "item-id"
-  ```
-
-- **Show help**:
-  ```
-  python -m app.main help
-  ```
-
-## Testing
-
-Run the tests with:
-
-```
+```powershell
 python -m unittest discover tests
 ```
 
-## Contributing
+## CLI Usage
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Create an item:
+
+```powershell
+python -m app.main create --name "Item Name" --description "Item Description"
+```
+
+List all items:
+
+```powershell
+python -m app.main list
+```
+
+Get an item by ID:
+
+```powershell
+python -m app.main get --id "item-id"
+```
+
+Update an item:
+
+```powershell
+python -m app.main update --id "item-id" --name "New Name" --description "New Description"
+```
+
+Delete an item:
+
+```powershell
+python -m app.main delete --id "item-id"
+```
+
+## API Routes
+
+When deployed to Vercel, `/` returns a small API overview and the CRUD API is available under `/api`.
+
+```text
+GET    /api
+GET    /api/items
+POST   /api/items
+GET    /api/items/{id}
+PUT    /api/items/{id}
+PATCH  /api/items/{id}
+DELETE /api/items/{id}
+```
+
+Example create request:
+
+```powershell
+curl -X POST https://your-project.vercel.app/api/items `
+  -H "Content-Type: application/json" `
+  -d "{\"name\":\"Item Name\",\"description\":\"Item Description\"}"
+```
+
+## Vercel Deployment
+
+This project is prepared for Vercel with:
+
+- `api/index.py` for the Python serverless function
+- `vercel.json` for API rewrites and function bundle exclusions
+- `.vercelignore` to keep local-only files out of deployments
+
+Deploy with the Vercel CLI:
+
+```powershell
+npm install -g vercel
+vercel
+```
+
+Or import the GitHub repository from the Vercel dashboard.
+
+## Storage Note
+
+Local CLI usage writes to `data/db.json`.
+
+On Vercel, the function writes to temporary storage because serverless deployments do not provide persistent writable project files. This is enough for a deployment smoke test, but production CRUD data should use a real database such as Postgres, Supabase, Neon, or another hosted store.
+
+You can override the JSON file path locally with:
+
+```powershell
+$env:CRUD_DB_PATH="C:\path\to\db.json"
+```

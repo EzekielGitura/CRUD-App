@@ -11,16 +11,16 @@ def validate_item_data(data: Dict[str, Any]) -> List[str]:
     # Check for required fields
     if "name" not in data:
         errors.append("Name is required")
-    elif not data["name"].strip():
+    elif not isinstance(data["name"], str) or not data["name"].strip():
         errors.append("Name cannot be empty")
         
     if "description" not in data:
         errors.append("Description is required")
-    elif not data["description"].strip():
+    elif not isinstance(data["description"], str) or not data["description"].strip():
         errors.append("Description cannot be empty")
     
     # Validate name length
-    if "name" in data and len(data["name"]) > 100:
+    if "name" in data and isinstance(data["name"], str) and len(data["name"]) > 100:
         errors.append("Name must be less than 100 characters")
     
     return errors
@@ -48,7 +48,8 @@ def search_items(items: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]
     query = query.lower()
     return [
         item for item in items
-        if query in item["name"].lower() or query in item["description"].lower()
+        if query in item.get("name", "").lower()
+        or query in item.get("description", "").lower()
     ]
 
 def generate_slug(name: str) -> str:
