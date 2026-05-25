@@ -29,6 +29,7 @@ ENV/
 .vscode/
 *.swp
 *.swo
+.vercel/
 
 # Data
 data/db.json
